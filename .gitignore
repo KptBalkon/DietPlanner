@@ -3,6 +3,10 @@
 
 # Server
 DietPlanner.Api/.vs/
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 # User-specific files
 *.suo
 *.user
