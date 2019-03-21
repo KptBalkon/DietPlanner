@@ -1,0 +1,12 @@
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\bin\Debug\netcoreapp2.2\DietPlanner.Infrastructure.deps.json
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\bin\Debug\netcoreapp2.2\DietPlanner.Infrastructure.dll
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\bin\Debug\netcoreapp2.2\DietPlanner.Infrastructure.pdb
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\bin\Debug\netcoreapp2.2\DietPlanner.Core.dll
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\bin\Debug\netcoreapp2.2\DietPlanner.Core.pdb
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\obj\Debug\netcoreapp2.2\DietPlanner.Infrastructure.csprojAssemblyReference.cache
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\obj\Debug\netcoreapp2.2\DietPlanner.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\obj\Debug\netcoreapp2.2\DietPlanner.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\obj\Debug\netcoreapp2.2\DietPlanner.Infrastructure.AssemblyInfo.cs
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\obj\Debug\netcoreapp2.2\DietPlanner.Infrastructure.csproj.CopyComplete
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\obj\Debug\netcoreapp2.2\DietPlanner.Infrastructure.dll
+C:\Users\Ranger\Documents\Projekty\DietPlanner\DietPlanner.Infrastructure\obj\Debug\netcoreapp2.2\DietPlanner.Infrastructure.pdb
