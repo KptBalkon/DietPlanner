@@ -36,7 +36,7 @@ namespace DietPlanner.Infrastructure.Services
                 throw new Exception("User with '{email}' already exists");
             }
 
-            var salt = Guid.NewGuid().ToString("N"); //TEMP - Still Temporary, test 3
+            var salt = Guid.NewGuid().ToString("N"); //TEMP - Still Temporary, test 4 and i hope last (heh)
             user = User.Create(username, email, password, salt);
             await _userRepository.AddAsync(user);
         }
