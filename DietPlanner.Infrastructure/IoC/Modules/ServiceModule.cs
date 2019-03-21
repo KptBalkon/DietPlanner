@@ -15,10 +15,14 @@ namespace DietPlanner.Infrastructure.IoC.Modules
             .GetTypeInfo()
             .Assembly;
 
-        builder.RegisterAssemblyTypes(assembly)
-            .Where(x => x.IsAssignableTo<IService>()) //przeskanuj assembly w poszukiwaniu typów które są przypisywalne do IService
-            .AsImplementedInterfaces()
-            .InstancePerLifetimeScope();
-    }
+            builder.RegisterAssemblyTypes(assembly)
+                .Where(x => x.IsAssignableTo<IService>()) //przeskanuj assembly w poszukiwaniu typów które są przypisywalne do IService
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<Encrypter>()
+                .As<IEncrypter>()
+                .SingleInstance();
+        }
 }
 }

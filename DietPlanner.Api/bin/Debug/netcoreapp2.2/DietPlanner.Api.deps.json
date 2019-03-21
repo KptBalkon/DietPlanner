@@ -29,6 +29,7 @@
           "Autofac.Extensions.DependencyInjection": "4.4.0",
           "DietPlanner.Infrastructure": "1.0.0",
           "Microsoft.AspNetCore.App": "2.2.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "2.2.0",
           "Microsoft.AspNetCore.Razor.Design": "2.2.0",
           "Microsoft.NETCore.App": "2.2.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.0",
@@ -583,6 +584,7 @@
           "AutoMapper": "8.0.0",
           "Autofac": "4.9.1",
           "DietPlanner.Core": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "2.2.0",
           "Microsoft.Extensions.Configuration": "2.2.0",
           "Microsoft.Extensions.Configuration.Binder": "2.2.0",
           "Newtonsoft.Json": "12.0.1"

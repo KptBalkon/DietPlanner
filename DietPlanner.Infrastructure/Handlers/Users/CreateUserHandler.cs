@@ -19,7 +19,7 @@ namespace DietPlanner.Infrastructure.Handlers.Users
 
         public async Task HandleAsync(CreateUser command)
         {
-            await _userService.RegisterAsync(command.Username, command.Email, command.Password);
+            await _userService.RegisterAsync(command.Username, command.Email, command.Password, command.Role);
         }
     }
 }

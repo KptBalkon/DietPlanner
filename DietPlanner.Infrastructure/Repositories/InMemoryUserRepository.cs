@@ -13,9 +13,9 @@ namespace DietPlanner.Infrastructure.Repositories
     {
         private static ISet<User> _users = new HashSet<User>
             {
-            User.Create("Johnny6", "johnny@gmail.com", "secretpass", "salt"),
-            User.Create("SexyJackie", "jackie@gmail.com", "secretpass", "salt"),
-            User.Create("GoodEmperor", "empire@smail.com", "secretpass", "salt")
+            User.Create("Johnny6", "johnny@gmail.com","user" , "secretpass", "salt"),
+            User.Create("SexyJackie", "jackie@gmail.com", "user", "secretpass", "salt"),
+            User.Create("GoodEmperor", "empire@smail.com", "user", "secretpass", "salt")
             };
 
 

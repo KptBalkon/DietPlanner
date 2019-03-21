@@ -20,9 +20,10 @@ namespace DietPlanner.Tests.Services
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
+            var encrypterMock = new Mock<IEncrypter>();
 
-            var userService = new UserService(userRepositoryMock.Object, mapperMock.Object);
-            await userService.RegisterAsync("user", "user@email.com", "password");
+            var userService = new UserService(userRepositoryMock.Object, mapperMock.Object, encrypterMock.Object);
+            await userService.RegisterAsync("user", "user@email.com", "password", "user");
             userRepositoryMock.Verify(x => x.AddAsync(It.IsAny<User>()), Times.Once);
         }
 
@@ -31,12 +32,13 @@ namespace DietPlanner.Tests.Services
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
+            var encrypterMock = new Mock<IEncrypter>();
 
-            userRepositoryMock.Setup(x => x.GetAsync("user@email.com")).ReturnsAsync(() => User.Create("user11","user@email.com","password","salt"));
+            userRepositoryMock.Setup(x => x.GetAsync("user@email.com")).ReturnsAsync(() => User.Create("user11","user@email.com", "user", "password","salt"));
 
-            var userService = new UserService(userRepositoryMock.Object, mapperMock.Object);
+            var userService = new UserService(userRepositoryMock.Object, mapperMock.Object, encrypterMock.Object);
             Assert.ThrowsAsync<Exception>
-                (() => userService.RegisterAsync("user11", "user@email.com", "password"));
+                (() => userService.RegisterAsync("user11", "user@email.com", "password", "user"));
         }
 
         [Test]
@@ -44,7 +46,8 @@ namespace DietPlanner.Tests.Services
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
-            var userService = new UserService(userRepositoryMock.Object, mapperMock.Object);
+            var encrypterMock = new Mock<IEncrypter>();
+            var userService = new UserService(userRepositoryMock.Object, mapperMock.Object,encrypterMock.Object);
             var user = await userService.GetAsync("notexist@email.com");
             Assert.AreEqual(user, null);
         }
@@ -65,7 +68,7 @@ namespace DietPlanner.Tests.Services
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
 
-            userRepositoryMock.Setup(x => x.GetAsync("user@email.com")).ReturnsAsync(() => User.Create("user11", "user@email.com", "password", "salt"));
+            userRepositoryMock.Setup(x => x.GetAsync("user@email.com")).ReturnsAsync(() => User.Create("user11", "user@email.com", "user", "password", "salt"));
 
             var planService = new PlanService(userRepositoryMock.Object, mapperMock.Object);
             await planService.RegisterUsersPlanAsync("user@email.com", 60, DateTime.UtcNow);

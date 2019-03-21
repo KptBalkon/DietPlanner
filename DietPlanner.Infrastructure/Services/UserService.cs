@@ -13,11 +13,13 @@ namespace DietPlanner.Infrastructure.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-       
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        private readonly IEncrypter _encrypter;
+
+        public UserService(IUserRepository userRepository, IMapper mapper, IEncrypter encrypter)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _encrypter = encrypter;
         }
 
         public async Task<UserDTO> GetAsync(string email)
@@ -27,7 +29,23 @@ namespace DietPlanner.Infrastructure.Services
             return _mapper.Map<User, UserDTO>(user);
         }
 
-        public async Task RegisterAsync(string username, string email, string password)
+        public async Task LoginAsync(string email, string password)
+        {
+            var user = await _userRepository.GetAsync(email);
+            if (user == null)
+            {
+                throw new Exception("Invalid credentials");
+            }
+            var salt = _encrypter.GetSalt(password);
+            var hash = _encrypter.GetHash(password, salt);
+            if(user.Password == hash)
+            {
+                return;
+            }
+            throw new Exception("Invalid credentials");
+        }
+
+        public async Task RegisterAsync(string username, string email, string password, string role)
         {
             var user = await _userRepository.GetAsync(email);
 
@@ -36,8 +54,9 @@ namespace DietPlanner.Infrastructure.Services
                 throw new Exception("User with '{email}' already exists");
             }
 
-            var salt = Guid.NewGuid().ToString("N"); //Temporary
-            user = User.Create(username, email, password, salt);
+            var salt = _encrypter.GetSalt(password);
+            var hash = _encrypter.GetHash(password, salt);
+            user = User.Create(username, email, role, hash, salt);
             await _userRepository.AddAsync(user);
         }
     }

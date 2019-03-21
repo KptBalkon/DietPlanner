@@ -13,7 +13,9 @@ namespace DietPlanner.Core.Domain
         public string Email { get; protected set; }
         public string Password { get; protected set; }
         public string Salt { get; protected set; }
+        public string Role { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
+        public DateTime UpdatedAt { get; protected set; }
 
         public Plan Plan { get; protected set; }
         public IEnumerable<WeightPoint> WeightPoints { get; protected set; }
@@ -22,7 +24,7 @@ namespace DietPlanner.Core.Domain
         {
         }
 
-        protected User(string username, string email, string password, string salt)
+        protected User(string username, string email, string role, string password, string salt)
         {
             UserId = Guid.NewGuid();
             SetUsername(username);
@@ -30,6 +32,8 @@ namespace DietPlanner.Core.Domain
             SetPassword(password);
             Salt = salt;
             CreatedAt = DateTime.UtcNow;
+            UpdatedAt = DateTime.UtcNow;
+            SetRole(role);
         }
 
         protected void SetPassword(string password)
@@ -58,6 +62,20 @@ namespace DietPlanner.Core.Domain
             Username = username;
         }
 
+        public void SetRole(string role)
+        {
+            if (string.IsNullOrWhiteSpace(role))
+            {
+                throw new Exception("Role cannot be empty.");
+            }
+            if (Role == role)
+            {
+                return;
+            }
+            Role = role;
+            UpdatedAt = DateTime.UtcNow;
+        }
+
         protected void SetEmail(string email)
         {
             try
@@ -77,7 +95,7 @@ namespace DietPlanner.Core.Domain
             Plan = Plan.Create(UserId, plannedWeight, targetDate);
     }
 
-        public static User Create(string username, string email, string password, string salt)
-            => new User(username, email, password, salt);
+        public static User Create(string username, string email, string role, string password, string salt)
+            => new User(username, email, role, password, salt);
     }
 }
