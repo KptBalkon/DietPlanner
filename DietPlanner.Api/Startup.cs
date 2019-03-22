@@ -45,6 +45,10 @@ namespace DietPlanner.Api
             var jwtSection = Configuration.GetSection("Authentication");
             var jwtOptions = new AuthenticationSettings();
             jwtSection.Bind(jwtOptions);
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("admin", policy => policy.RequireRole("admin"));
+            });
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;

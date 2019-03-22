@@ -35,18 +35,28 @@ namespace DietPlanner.Api.Controllers
             return NoContent();
         }
 
+        //These api endpoints are for authorization testing purposes only
+
         [HttpGet]
-        [Route("token")]
-        public IActionResult Get()
+        [Route("usertoken")]
+        public IActionResult GetToken()
         {
             var token = _jwtHandler.CreateToken("user1@email.com", "user");
 
             return Json(token);
         }
 
+        [HttpGet]
+        [Route("admintoken")]
+        public IActionResult GetAdminToken()
+        {
+            var token = _jwtHandler.CreateToken("user1@email.com", "admin");
+
+            return Json(token);
+        }
 
         [HttpGet]
-        [Authorize]
+        [Authorize("admin")]
         [Route("auth")]
         public IActionResult GetAuth()
         {
