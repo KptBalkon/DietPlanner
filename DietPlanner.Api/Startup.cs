@@ -40,8 +40,6 @@ namespace DietPlanner.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-
-
             var jwtSection = Configuration.GetSection("Authentication");
             var jwtOptions = new AuthenticationSettings();
             jwtSection.Bind(jwtOptions);

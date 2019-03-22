@@ -49,7 +49,12 @@ namespace DietPlanner.Infrastructure.Services
         {
             var user = await _userRepository.GetAsync(email);
 
-            if(user!=null)
+            if (password.Length < 8)
+            {
+                throw new Exception("Password must be at least 8 characters long");
+            }
+
+            if (user!=null)
             {
                 throw new Exception("User with '{email}' already exists");
             }

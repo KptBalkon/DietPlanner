@@ -21,6 +21,8 @@ namespace DietPlanner.Tests.Services
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
             var encrypterMock = new Mock<IEncrypter>();
+            encrypterMock.Setup(x => x.GetSalt(It.IsAny<string>())).Returns("somesalt");
+            encrypterMock.Setup(x => x.GetHash(It.IsAny<string>(), It.IsAny<string>())).Returns("hashedpassword");
 
             var userService = new UserService(userRepositoryMock.Object, mapperMock.Object, encrypterMock.Object);
             await userService.RegisterAsync("user", "user@email.com", "password", "user");

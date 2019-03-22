@@ -46,7 +46,8 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             {
                 Email = "newuser@email.com",
                 Username = "TestMike",
-                Password = "secretpassword"
+                Password = "secretpassword",
+                Role = "user"
             };
             var payload = GetPayload(request);
             var response = await Client.PostAsync("users", payload);
@@ -77,7 +78,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
         {
             var request = new CreateUser
             {
-                Email = "Userro@email.com",
+                Email = "Userroink@email.com",
                 Username = "X",
                 Password = "password"
             };
@@ -92,7 +93,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
         {
             var request = new CreateUser
             {
-                Email = "Userro@email.com",
+                Email = "Userronk@email.com",
                 Username = "onehundredonehundredonehundredonehundredonehundredonehundredonehundredonehundredonehundredonehundredoops",
                 Password = "password"
             };
@@ -107,7 +108,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
         {
             var request = new CreateUser
             {
-                Email = "Userro@email.com",
+                Email = "Userrok@email.com",
                 Username = "__!BobbyBoy!__",
                 Password = "password"
             };
@@ -124,7 +125,8 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             {
                 Email = "Userro@email.com",
                 Username = "BobbyBoy",
-                Password = "pas"
+                Password = "pas",
+                Role = "user"
             };
             var payload = GetPayload(request);
             var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users", payload));

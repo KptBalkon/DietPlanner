@@ -38,10 +38,7 @@ namespace DietPlanner.Core.Domain
 
         protected void SetPassword(string password)
         {
-           if(password.Length<8)
-            {
-                throw new Exception("Password must be at least 8 characters long");
-            }
+
             Password = password;
         }
 
