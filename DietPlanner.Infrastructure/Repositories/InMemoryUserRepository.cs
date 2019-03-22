@@ -11,12 +11,7 @@ namespace DietPlanner.Infrastructure.Repositories
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        private static ISet<User> _users = new HashSet<User>
-            {
-            User.Create("Johnny6", "johnny@gmail.com","user" , "secretpass", "salt"),
-            User.Create("SexyJackie", "jackie@gmail.com", "user", "secretpass", "salt"),
-            User.Create("GoodEmperor", "empire@smail.com", "user", "secretpass", "salt")
-            };
+        private static ISet<User> _users = new HashSet<User>();
 
 
         public async Task<User> GetAsync(Guid userId)

@@ -24,9 +24,9 @@ namespace DietPlanner.Core.Domain
         {
         }
 
-        protected User(string username, string email, string role, string password, string salt)
+        protected User(Guid userId, string username, string email, string role, string password, string salt)
         {
-            UserId = Guid.NewGuid();
+            UserId = userId;
             SetUsername(username);
             SetEmail(email);
             SetPassword(password);
@@ -92,7 +92,7 @@ namespace DietPlanner.Core.Domain
             Plan = Plan.Create(UserId, plannedWeight, targetDate);
     }
 
-        public static User Create(string username, string email, string role, string password, string salt)
-            => new User(username, email, role, password, salt);
+        public static User Create(Guid userId, string username, string email, string role, string password, string salt)
+            => new User(userId, username, email, role, password, salt);
     }
 }

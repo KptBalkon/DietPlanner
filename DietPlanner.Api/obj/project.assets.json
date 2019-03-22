@@ -4774,6 +4774,7 @@
           "Autofac": "4.9.1",
           "DietPlanner.Core": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "2.2.0",
+          "Microsoft.Extensions.Caching.Memory": "2.2.0",
           "Microsoft.Extensions.Configuration": "2.2.0",
           "Microsoft.Extensions.Configuration.Binder": "2.2.0",
           "Newtonsoft.Json": "12.0.1"
@@ -13131,6 +13132,7 @@
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
+      "Microsoft.Extensions.Caching.Memory >= 2.2.0",
       "Microsoft.NETCore.App >= 2.2.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 2.2.0",
       "Newtonsoft.Json >= 12.0.1"
@@ -13205,6 +13207,10 @@
           },
           "Microsoft.AspNetCore.Razor.Design": {
             "suppressParent": "All",
+            "target": "Package",
+            "version": "[2.2.0, )"
+          },
+          "Microsoft.Extensions.Caching.Memory": {
             "target": "Package",
             "version": "[2.2.0, )"
           },

@@ -36,8 +36,7 @@ namespace DietPlanner.Infrastructure.Services
             {
                 throw new Exception("Invalid credentials");
             }
-            var salt = _encrypter.GetSalt(password);
-            var hash = _encrypter.GetHash(password, salt);
+            var hash = _encrypter.GetHash(password, user.Salt);
             if(user.Password == hash)
             {
                 return;
@@ -45,7 +44,7 @@ namespace DietPlanner.Infrastructure.Services
             throw new Exception("Invalid credentials");
         }
 
-        public async Task RegisterAsync(string username, string email, string password, string role)
+        public async Task RegisterAsync(Guid userId, string username, string email, string password, string role)
         {
             var user = await _userRepository.GetAsync(email);
 
@@ -61,7 +60,7 @@ namespace DietPlanner.Infrastructure.Services
 
             var salt = _encrypter.GetSalt(password);
             var hash = _encrypter.GetHash(password, salt);
-            user = User.Create(username, email, role, hash, salt);
+            user = User.Create(userId, username, email, role, hash, salt);
             await _userRepository.AddAsync(user);
         }
     }

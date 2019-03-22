@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DietPlanner.Infrastructure.Commands;
 using DietPlanner.Infrastructure.Commands.Users;
-using DietPlanner.Infrastructure.DTO;
 using DietPlanner.Infrastructure.Services;
 using DietPlanner.Infrastructure.Settings;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DietPlanner.Api.Controllers

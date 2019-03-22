@@ -9,7 +9,7 @@ namespace DietPlanner.Infrastructure.Services
     public interface IUserService: IService
     {
         Task<UserDTO> GetAsync(string email);
-        Task RegisterAsync(string username, string email, string password, string role);
+        Task RegisterAsync(Guid userId, string username, string email, string password, string role);
         Task LoginAsync(string email, string password);
     }
 }

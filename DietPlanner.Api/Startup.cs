@@ -2,11 +2,7 @@
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using DietPlanner.Core.Repositories;
 using DietPlanner.Infrastructure.IoC;
-using DietPlanner.Infrastructure.IoC.Modules;
-using DietPlanner.Infrastructure.Mappers;
-using DietPlanner.Infrastructure.Repositories;
 using DietPlanner.Infrastructure.Services;
 using DietPlanner.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -64,6 +60,8 @@ namespace DietPlanner.Api
                 });
             services.Configure<AuthenticationSettings>(jwtSection);
 
+            services.AddMemoryCache();
+
             var builder = new ContainerBuilder();
             builder.Populate(services);
             builder.RegisterModule(new ContainerModule(Configuration));
@@ -75,6 +73,7 @@ namespace DietPlanner.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime applifetime)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -84,6 +83,14 @@ namespace DietPlanner.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            var generalSettings = app.ApplicationServices.GetService<GeneralSettings>();
+            if(generalSettings.SeedData)
+            {
+                var dataInitializer = app.ApplicationServices.GetService<IDataInitializer>();
+                dataInitializer.SeedAsync();
+            }
+
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

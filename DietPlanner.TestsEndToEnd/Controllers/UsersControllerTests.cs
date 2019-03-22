@@ -1,29 +1,19 @@
-﻿using DietPlanner.Api;
-using DietPlanner.Infrastructure.Commands.Users;
-using DietPlanner.Infrastructure.DTO;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
+﻿using DietPlanner.Infrastructure.Commands.Users;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DietPlanner.TestsEndToEnd.Controllers
 {
     public class UsersControllerTests: ControllerTestsBase
     {
-
         [Test]
         public async Task given_valid_email_user_should_exist()
         {
             //Act
-            var email = "empire@smail.com";
+            var email = "user1@email.com";
             var user = await GetUserAsync(email);
-
             //Assert
             Assert.AreEqual(user.Email, email);
         }
@@ -56,6 +46,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
 
             var user = await GetUserAsync(request.Email);
             Assert.AreEqual(user.Email, request.Email);
+            
         }
         
         [Test]
@@ -144,7 +135,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 targetDate = DateTime.Parse("02/02/2020")
             };
             var payload = GetPayload(request);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users/empire@smail.com/plan", payload));
+            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users/user1@email.com/plan", payload));
             Assert.That(ex.Message, Is.EqualTo("You cannot plan to have negative weight"));
             await Task.CompletedTask;
         }
@@ -159,7 +150,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 targetDate = DateTime.Parse("02/02/1991")
             };
             var payload = GetPayload(request);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users/empire@smail.com/plan", payload));
+            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users/user1@email.com/plan", payload));
             Assert.That(ex.Message, Is.EqualTo("Please provide future date"));
             await Task.CompletedTask;
         }

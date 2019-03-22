@@ -1,11 +1,9 @@
 ﻿using DietPlanner.Api;
 using DietPlanner.Infrastructure.DTO;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,10 +17,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
 
         public ControllerTestsBase()
         {
-            Server = new TestServer(new WebHostBuilder()
-                .UseConfiguration(new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json")
-                    .Build())
+            Server = new TestServer(WebHost.CreateDefaultBuilder()
                 .UseStartup<Startup>());
             Client = Server.CreateClient();
         }
