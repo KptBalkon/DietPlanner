@@ -40,33 +40,32 @@ namespace DietPlanner.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+
+
+            var jwtSection = Configuration.GetSection("Authentication");
+            var jwtOptions = new AuthenticationSettings();
+            jwtSection.Bind(jwtOptions);
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
+                        ValidIssuer = jwtOptions.Issuer,
+                        ValidateAudience = false,
+                        ValidateLifetime = true
+                    };
+                });
+            services.Configure<AuthenticationSettings>(jwtSection);
+
             var builder = new ContainerBuilder();
             builder.Populate(services);
             builder.RegisterModule(new ContainerModule(Configuration));
             ApplicationContainer = builder.Build();
-
-            var appSettingsSection = Configuration.GetSection("Authentication");
-            services.Configure<AuthenticationSettings>(appSettingsSection);
-
-            // configure jwt authentication
-            var appSettings = appSettingsSection.Get<AuthenticationSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Key);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidIssuer = appSettings.Issuer,
-                    ValidateAudience = false
-                };
-            });
 
             return new AutofacServiceProvider(ApplicationContainer);
         }
@@ -84,8 +83,8 @@ namespace DietPlanner.Api
                 app.UseHsts();
             }
 
-            app.UseAuthentication();
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
             applifetime.ApplicationStopped.Register(() => ApplicationContainer.Dispose());
         }
