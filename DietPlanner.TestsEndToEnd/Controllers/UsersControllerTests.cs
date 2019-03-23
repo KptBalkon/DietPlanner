@@ -1,7 +1,11 @@
 ﻿using DietPlanner.Infrastructure.Commands.Users;
+using DietPlanner.TestsEndToEnd.DTO;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace DietPlanner.TestsEndToEnd.Controllers
@@ -135,6 +139,8 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 targetDate = DateTime.Parse("02/02/2020")
             };
             var payload = GetPayload(request);
+            var token = await GetRandomTokenAsync();
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
             var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users/user1@email.com/plan", payload));
             Assert.That(ex.Message, Is.EqualTo("You cannot plan to have negative weight"));
             await Task.CompletedTask;
@@ -150,6 +156,8 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 targetDate = DateTime.Parse("02/02/1991")
             };
             var payload = GetPayload(request);
+            var token = await GetRandomTokenAsync();
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
             var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users/user1@email.com/plan", payload));
             Assert.That(ex.Message, Is.EqualTo("Please provide future date"));
             await Task.CompletedTask;

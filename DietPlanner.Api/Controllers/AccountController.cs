@@ -23,16 +23,6 @@ namespace DietPlanner.Api.Controllers
         {
             _userService = userService;
             _jwtHandler = jwtHandler;
-            Console.WriteLine(_jwtHandler.CreateToken("any@mail.com","user"));
-        }
-
-        [HttpPut]
-        [Route("passwordchange")]
-        public async Task<IActionResult> Put([FromBody]ChangeUserPassword command)
-        {
-            await CommandDispatcher.DispatchAsync(command);
-
-            return NoContent();
         }
 
         //These api endpoints are for authorization testing purposes only
@@ -41,7 +31,7 @@ namespace DietPlanner.Api.Controllers
         [Route("usertoken")]
         public IActionResult GetToken()
         {
-            var token = _jwtHandler.CreateToken("user1@email.com", "user");
+            var token = _jwtHandler.CreateToken(Guid.NewGuid(), "user");
 
             return Json(token);
         }
@@ -50,7 +40,7 @@ namespace DietPlanner.Api.Controllers
         [Route("admintoken")]
         public IActionResult GetAdminToken()
         {
-            var token = _jwtHandler.CreateToken("user1@email.com", "admin");
+            var token = _jwtHandler.CreateToken(Guid.NewGuid(), "admin");
 
             return Json(token);
         }

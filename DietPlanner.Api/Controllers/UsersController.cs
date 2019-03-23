@@ -34,7 +34,7 @@ namespace DietPlanner.Api.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody]CreateUser command)
         {
-            await CommandDispatcher.DispatchAsync(command);
+            await DispatchAsync(command);
             return Created($"users/{command.Email}", new object());
         }
 
@@ -57,7 +57,7 @@ namespace DietPlanner.Api.Controllers
         public async Task<IActionResult> PostPlan([FromBody]AddUserPlan command, [FromRoute]string email)
         {
             command.email = email;
-            await CommandDispatcher.DispatchAsync(command);
+            await DispatchAsync(command);
             return Created($"users/{command.email}/plan", new object());
         }
     }

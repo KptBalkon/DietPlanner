@@ -7,6 +7,6 @@ namespace DietPlanner.Infrastructure.Services
 {
     public interface IJwtHandler
     {
-        JwtDTO CreateToken(string email, string role);
+        JwtDTO CreateToken(Guid userId, string role);
     }
 }

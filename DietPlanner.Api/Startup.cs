@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace DietPlanner.Api
 {
@@ -61,6 +62,7 @@ namespace DietPlanner.Api
             services.Configure<AuthenticationSettings>(jwtSection);
 
             services.AddMemoryCache();
+            services.AddMvc().AddJsonOptions(o => o.SerializerSettings.Formatting = Formatting.Indented);
 
             var builder = new ContainerBuilder();
             builder.Populate(services);

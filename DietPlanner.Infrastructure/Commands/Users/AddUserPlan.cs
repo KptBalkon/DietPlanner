@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DietPlanner.Infrastructure.Commands.Users
 {
-    public class AddUserPlan : ICommand
+    public class AddUserPlan : AuthenticatedCommandBase
     {
         public string email { get; set; }
         public int plannedWeight { get; set; }

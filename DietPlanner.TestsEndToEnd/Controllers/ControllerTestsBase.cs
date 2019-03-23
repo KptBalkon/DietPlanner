@@ -1,5 +1,6 @@
 ﻿using DietPlanner.Api;
 using DietPlanner.Infrastructure.DTO;
+using DietPlanner.TestsEndToEnd.DTO;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -33,6 +34,14 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             var response = await Client.GetAsync($"users/{email}");
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UserDTO>(responseString);
+        }
+        
+        protected async Task<TokenDTO> GetRandomTokenAsync()
+        {
+            var response = await Client.GetAsync("account/usertoken");
+            var responseString = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<TokenDTO>(responseString);
+            
         }
     }
 }
