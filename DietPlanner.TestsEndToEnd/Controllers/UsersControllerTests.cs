@@ -1,8 +1,10 @@
 ﻿using DietPlanner.Infrastructure.Commands.Users;
+using DietPlanner.Infrastructure.DTO;
 using DietPlanner.TestsEndToEnd.DTO;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -13,27 +15,21 @@ namespace DietPlanner.TestsEndToEnd.Controllers
     public class UsersControllerTests: ControllerTestsBase
     {
         [Test]
-        public async Task given_valid_email_user_should_exist()
+        // GET /users/
+        public async Task getting_all_users_returns_list_of_users()
         {
-            //Act
-            var email = "user1@email.com";
-            var user = await GetUserAsync(email);
-            //Assert
-            Assert.AreEqual(user.Email, email);
+            var response = await Client.GetAsync("users");
+            response.EnsureSuccessStatusCode();
+
+            var stringresponse = await response.Content.ReadAsStringAsync();
+
+            var users = JsonConvert.DeserializeObject<IEnumerable<UserDTO>>(stringresponse);
+
+            Assert.IsNotEmpty(users);
         }
 
         [Test]
-        public async Task given_invalid_email_user_should_not_exist()
-        {
-            //Act
-            var email = "empiresrempire@smail.com";
-            var response = await Client.GetAsync($"users/{email}");
-
-            //Assert
-            Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
-        }
-
-        [Test]
+        // POST /users/
         public async Task given_unique_email_user_should_be_created()
         {
             var request = new CreateUser
@@ -50,10 +46,11 @@ namespace DietPlanner.TestsEndToEnd.Controllers
 
             var user = await GetUserAsync(request.Email);
             Assert.AreEqual(user.Email, request.Email);
-            
+
         }
-        
+
         [Test]
+        // POST /users/
         public async Task given_inproper_email_exception_should_be_thrown()
         {
             var request = new CreateUser
@@ -63,12 +60,13 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 Password = "password"
             };
             var payload = GetPayload(request);
-            var ex = Assert.ThrowsAsync<Exception>(async() => await Client.PostAsync("users", payload));
+            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users", payload));
             Assert.That(ex.Message, Is.EqualTo("Please provide properly formatted Email."));
             await Task.CompletedTask;
         }
 
         [Test]
+        // POST /users/
         public async Task given_too_short_username_exception_should_be_thrown()
         {
             var request = new CreateUser
@@ -84,13 +82,15 @@ namespace DietPlanner.TestsEndToEnd.Controllers
         }
 
         [Test]
+        // POST /users/
         public async Task given_too_long_username_exception_should_be_thrown()
         {
             var request = new CreateUser
             {
                 Email = "Userronk@email.com",
                 Username = "onehundredonehundredonehundredonehundredonehundredonehundredonehundredonehundredonehundredonehundredoops",
-                Password = "password"
+                Password = "password",
+                Role = "user"
             };
             var payload = GetPayload(request);
             var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users", payload));
@@ -99,6 +99,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
         }
 
         [Test]
+        // POST /users/
         public async Task given_username_with_special_characters_exception_should_be_thrown()
         {
             var request = new CreateUser
@@ -114,6 +115,7 @@ namespace DietPlanner.TestsEndToEnd.Controllers
         }
 
         [Test]
+        // POST /users/
         public async Task given_too_short_password_exception_should_be_thrown()
         {
             var request = new CreateUser
@@ -128,6 +130,53 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             Assert.That(ex.Message, Is.EqualTo("Password must be at least 8 characters long"));
             await Task.CompletedTask;
         }
+        [Test]
+        // GET /users/{email}
+        public async Task given_valid_email_user_should_exist()
+        {
+            //Act
+            var email = "user1@email.com";
+            var user = await GetUserAsync(email);
+            //Assert
+            Assert.AreEqual(user.Email, email);
+        }
+
+        [Test]
+        // GET /users/{email}
+        public async Task given_invalid_email_user_should_not_exist()
+        {
+            //Act
+            var email = "empiresrempire@smail.com";
+            var response = await Client.GetAsync($"users/{email}");
+
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
+        }
+
+        [Test]
+        // GET /users/{email}
+        public async Task given_valid_guid_user_should_exist()
+        {
+            //Act
+            var existingUser = await GetUserAsync("user1@email.com");
+            var existingId = existingUser.UserId;
+            var user = await GetUserAsync(existingUser.UserId);
+            //Assert
+            Assert.AreEqual(user.UserId, existingId);
+        }
+
+        [Test]
+        // GET /users/{email}
+        public async Task given_invalid_guid_user_should_not_exist()
+        {
+            //Act
+            var guid = Guid.NewGuid();
+            var response = await Client.GetAsync($"users/{guid}");
+
+            //Assert
+            Assert.AreEqual(response.StatusCode, HttpStatusCode.NotFound);
+        }
+
 
         [Test]
         public async Task given_negative_weight_exception_should_be_thrown()

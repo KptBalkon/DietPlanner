@@ -5,6 +5,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,7 +36,14 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<UserDTO>(responseString);
         }
-        
+
+        protected async Task<UserDTO> GetUserAsync(Guid guid)
+        {
+            var response = await Client.GetAsync($"users/{guid}");
+            var responseString = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<UserDTO>(responseString);
+        }
+
         protected async Task<TokenDTO> GetRandomTokenAsync()
         {
             var response = await Client.GetAsync("account/usertoken");

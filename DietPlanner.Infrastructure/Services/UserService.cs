@@ -22,9 +22,22 @@ namespace DietPlanner.Infrastructure.Services
             _encrypter = encrypter;
         }
 
+        public async Task<IEnumerable<UserDTO>> GetAllAsync()
+        {
+            IEnumerable<User> users = await _userRepository.GetAllAsync();
+            return _mapper.Map<IEnumerable<User>, IEnumerable<UserDTO>>(users);
+        }
+
         public async Task<UserDTO> GetAsync(string email)
         {
             User user = await _userRepository.GetAsync(email);
+
+            return _mapper.Map<User, UserDTO>(user);
+        }
+
+        public async Task<UserDTO> GetAsync(Guid id)
+        {
+            User user = await _userRepository.GetAsync(id);
 
             return _mapper.Map<User, UserDTO>(user);
         }
@@ -62,6 +75,24 @@ namespace DietPlanner.Infrastructure.Services
             var hash = _encrypter.GetHash(password, salt);
             user = User.Create(userId, username, email, role, hash, salt);
             await _userRepository.AddAsync(user);
+        }
+
+        public async Task UpdateUserAsync(Guid userId, string username, string email, string password, string role)
+        {
+            var user = await _userRepository.GetAsync(userId);
+            string salt = null;
+
+            if (password!=null)
+            {
+                if(password.Length<8)
+                {
+                    throw new Exception("Password must be at least 8 characters long");
+                }
+                salt = _encrypter.GetSalt(password);
+                var hash = _encrypter.GetHash(password, salt);
+            }
+            var changedUser = User.Create(userId, username ?? user.Username, email?? user.Email, role?? user.Role, password?? user.Password, salt?? user.Salt);
+            await _userRepository.UpdateAsync(changedUser);
         }
     }
 }

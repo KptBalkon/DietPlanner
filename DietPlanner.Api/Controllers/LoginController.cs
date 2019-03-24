@@ -25,7 +25,7 @@ namespace DietPlanner.Api.Controllers
             command.TokenId = Guid.NewGuid();
             await DispatchAsync(command);
             var jwt = _memoryCache.GetJwt(command.TokenId);
-
+            
             return Json(jwt);
         }
     }

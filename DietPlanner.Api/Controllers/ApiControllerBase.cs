@@ -26,7 +26,7 @@ namespace DietPlanner.Api.Controllers
         {
             if(command is IAuthenticatedCommand authenticatedCommand)
             {
-                authenticatedCommand.UserId = UserId;
+                authenticatedCommand.Procurer = UserId;
             }
             await _commandDispatcher.DispatchAsync(command);
         }

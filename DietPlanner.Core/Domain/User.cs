@@ -1,6 +1,7 @@
 ﻿using DietPlanner.Core.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 
@@ -9,6 +10,7 @@ namespace DietPlanner.Core.Domain
     public class User
     {
         public Guid UserId { get; protected set; }
+
         public string Username { get; protected set; }
         public string Email { get; protected set; }
         public string Password { get; protected set; }
@@ -38,7 +40,6 @@ namespace DietPlanner.Core.Domain
 
         protected void SetPassword(string password)
         {
-
             Password = password;
         }
 
@@ -48,7 +49,7 @@ namespace DietPlanner.Core.Domain
             {
                 throw new Exception("Username must be longer than 3 characters.");
             }
-            if (username.Length >100)
+            if (username.Length > 100)
             {
                 throw new Exception("Username cannot be longer than 100 characters.");
             }
@@ -94,5 +95,15 @@ namespace DietPlanner.Core.Domain
 
         public static User Create(Guid userId, string username, string email, string role, string password, string salt)
             => new User(userId, username, email, role, password, salt);
+
+        public void Update(string username, string email, string role, string password, string salt)
+        {
+            if (username!=null) this.SetUsername(username);
+            if (email!=null) this.SetEmail(email);
+            if (role!=null) this.SetRole(role);
+            if (password != null) this.SetPassword(password);
+            Salt = salt;
+            UpdatedAt = DateTime.UtcNow;
+        }
     }
 }

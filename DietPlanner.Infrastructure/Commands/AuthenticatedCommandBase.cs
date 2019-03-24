@@ -6,6 +6,6 @@ namespace DietPlanner.Infrastructure.Commands
 {
     public class AuthenticatedCommandBase : IAuthenticatedCommand
     {
-        public Guid UserId { get; set; }
+        public Guid Procurer { get; set; }
     }
 }

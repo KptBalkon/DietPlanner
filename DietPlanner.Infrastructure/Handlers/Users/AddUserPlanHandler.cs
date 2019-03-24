@@ -19,7 +19,7 @@ namespace DietPlanner.Infrastructure.Handlers.Users
 
         public async Task HandleAsync(AddUserPlan command)
         {
-            if(command.UserId == Guid.Empty)
+            if(command.Procurer == Guid.Empty)
             {
                 throw new Exception("You must be logged to add a plan");
             }

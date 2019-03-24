@@ -44,6 +44,9 @@ namespace DietPlanner.Infrastructure.Repositories
 
         public async Task UpdateAsync(User user)
         {
+            var userToRemove = await GetAsync(user.UserId);
+            _users.Remove(userToRemove);
+            _users.Add(user);
             await Task.CompletedTask;
         }
 
