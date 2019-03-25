@@ -4,6 +4,9 @@
 # Server
 DietPlanner.Api/.vs/
 
+# Secrets
+secrets.json
+
 # User-specific files
 *.suo
 *.user
