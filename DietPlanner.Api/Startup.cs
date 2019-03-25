@@ -2,6 +2,7 @@
 using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using DietPlanner.Api.Middleware;
 using DietPlanner.Infrastructure.IoC;
 using DietPlanner.Infrastructure.Services;
 using DietPlanner.Infrastructure.Settings;
@@ -95,6 +96,7 @@ namespace DietPlanner.Api
 
 
             app.UseHttpsRedirection();
+            app.UseMiddleware(typeof(ExceptionHandler));
             app.UseAuthentication();
             app.UseMvc();
             applifetime.ApplicationStopped.Register(() => ApplicationContainer.Dispose());

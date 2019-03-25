@@ -44,12 +44,20 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             return JsonConvert.DeserializeObject<UserDTO>(responseString);
         }
 
+        //TODO: Remove this method after testing
         protected async Task<TokenDTO> GetRandomTokenAsync()
         {
             var response = await Client.GetAsync("account/usertoken");
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TokenDTO>(responseString);
-            
+        }
+
+        protected async Task<ExceptionDTO> ConvertResponseToExceptionDTOAsync(HttpResponseMessage httpResponseMessage)
+        {
+            var stringresponse = await httpResponseMessage.Content.ReadAsStringAsync();
+            ExceptionDTO exception = JsonConvert.DeserializeObject<ExceptionDTO>(stringresponse);
+            exception.StatusCode = httpResponseMessage.StatusCode;
+            return exception;
         }
     }
 }

@@ -60,9 +60,12 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 Password = "password"
             };
             var payload = GetPayload(request);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users", payload));
-            Assert.That(ex.Message, Is.EqualTo("Please provide properly formatted Email."));
-            await Task.CompletedTask;
+            var response = await Client.PostAsync("users", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            //TODO: CustomException: InproperDataException
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "Please provide properly formatted Email.");
         }
 
         [Test]
@@ -76,9 +79,12 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 Password = "password"
             };
             var payload = GetPayload(request);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users", payload));
-            Assert.That(ex.Message, Is.EqualTo("Username must be longer than 3 characters."));
-            await Task.CompletedTask;
+
+            var response = await Client.PostAsync("users", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "Username must be longer than 3 characters.");
         }
 
         [Test]
@@ -93,9 +99,12 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 Role = "user"
             };
             var payload = GetPayload(request);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users", payload));
-            Assert.That(ex.Message, Is.EqualTo("Username cannot be longer than 100 characters."));
-            await Task.CompletedTask;
+
+            var response = await Client.PostAsync("users", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "Username cannot be longer than 100 characters.");
         }
 
         [Test]
@@ -109,9 +118,12 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 Password = "password"
             };
             var payload = GetPayload(request);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users", payload));
-            Assert.That(ex.Message, Is.EqualTo("Username can only contain letters and numbers."));
-            await Task.CompletedTask;
+
+            var response = await Client.PostAsync("users", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "Username can only contain letters and numbers.");
         }
 
         [Test]
@@ -126,9 +138,12 @@ namespace DietPlanner.TestsEndToEnd.Controllers
                 Role = "user"
             };
             var payload = GetPayload(request);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users", payload));
-            Assert.That(ex.Message, Is.EqualTo("Password must be at least 8 characters long"));
-            await Task.CompletedTask;
+
+            var response = await Client.PostAsync("users", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "Password must be at least 8 characters long");
         }
         [Test]
         // GET /users/{email}
@@ -190,10 +205,14 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             var payload = GetPayload(request);
             var token = await GetRandomTokenAsync();
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users/user1@email.com/plan", payload));
-            Assert.That(ex.Message, Is.EqualTo("You cannot plan to have negative weight"));
-            await Task.CompletedTask;
-        }
+
+            var response = await Client.PostAsync("users/user1@email.com/plan", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            //TODO: CustomException: InproperDataException
+            Assert.AreEqual(responseMessage.StatusCode,HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "You cannot plan to have negative weight");
+         }
 
         [Test]
         public async Task given_past_target_date_exception_should_be_thrown()
@@ -206,10 +225,14 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             };
             var payload = GetPayload(request);
             var token = await GetRandomTokenAsync();
+
             Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
-            var ex = Assert.ThrowsAsync<Exception>(async () => await Client.PostAsync("users/user1@email.com/plan", payload));
-            Assert.That(ex.Message, Is.EqualTo("Please provide future date"));
-            await Task.CompletedTask;
+
+            var response = await Client.PostAsync("users/user1@email.com/plan", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "Please provide future date");
         }
     }
 }

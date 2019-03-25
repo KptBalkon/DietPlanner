@@ -4,6 +4,7 @@ using DietPlanner.Infrastructure.Commands;
 using DietPlanner.Infrastructure.Commands.Users;
 using DietPlanner.Infrastructure.Services;
 using DietPlanner.Infrastructure.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DietPlanner.Api.Controllers
@@ -64,11 +65,17 @@ namespace DietPlanner.Api.Controllers
             return Json(user);
         }
 
-        [HttpPut]
+        [Authorize]
         [HttpPut("{userId:guid}")]
         public async Task<IActionResult> Put([FromBody]UpdateUser command, [FromRoute]Guid userId)
         {
             var user = await _userService.GetAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
             command.UserId = user.UserId;
             if (UserId != userId && !User.HasClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin"))
             {
@@ -80,34 +87,33 @@ namespace DietPlanner.Api.Controllers
                 return Unauthorized();
             }
 
-            if (user == null)
-            {
-                return NotFound();
-            }
             await DispatchAsync(command);
             return Ok();
         }
 
-        [HttpPut]
+        [Authorize]
         [HttpPut("{email}")]
         public async Task<IActionResult> Put([FromBody]UpdateUser command, [FromRoute]string email)
         {
             var user = await _userService.GetAsync(email);
-            command.UserId = user.UserId;
-            if (UserId != user.UserId && !User.HasClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin"))
-            {
-                return Unauthorized();
-            }
-
-            if (!User.HasClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin") && command.Role == "admin")
-            {
-                return Unauthorized();
-            }
 
             if (user == null)
             {
                 return NotFound();
             }
+
+            command.UserId = user.UserId;
+
+            if (UserId != user.UserId && !UserIsAdmin)
+            {
+                return Unauthorized();
+            }
+
+            if (command.Role == "admin" && !UserIsAdmin)
+            {
+                return Unauthorized();
+            }
+
             await DispatchAsync(command);
             return Ok();
         }

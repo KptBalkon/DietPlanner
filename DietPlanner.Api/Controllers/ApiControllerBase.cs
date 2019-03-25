@@ -17,6 +17,10 @@ namespace DietPlanner.Api.Controllers
             Guid.Parse(User.Identity.Name) :
             Guid.Empty;
 
+        protected bool UserIsAdmin => User.HasClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin") ?
+            true :
+            false;
+
         protected ApiControllerBase(ICommandDispatcher commandDispatcher)
         {
             _commandDispatcher = commandDispatcher;
