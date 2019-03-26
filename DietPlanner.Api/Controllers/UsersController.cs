@@ -77,12 +77,12 @@ namespace DietPlanner.Api.Controllers
             }
 
             command.UserId = user.UserId;
-            if (UserId != userId && !User.HasClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin"))
+            if (UserId != userId && !UserIsAdmin)
             {
                 return Unauthorized();
             }
 
-            if (!User.HasClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin") && command.Role == "admin")
+            if (!UserIsAdmin && command.Role == "admin")
             {
                 return Unauthorized();
             }
@@ -91,7 +91,7 @@ namespace DietPlanner.Api.Controllers
             return Ok();
         }
 
-        [Authorize]
+        [Authorize("admin")]
         [HttpPut("{email}")]
         public async Task<IActionResult> Put([FromBody]UpdateUser command, [FromRoute]string email)
         {
@@ -113,6 +113,47 @@ namespace DietPlanner.Api.Controllers
             {
                 return Unauthorized();
             }
+
+            await DispatchAsync(command);
+            return Ok();
+        }
+        
+
+        [HttpDelete("{userId:guid}")]
+        public async Task<IActionResult> Delete([FromRoute]Guid userId)
+        {
+            var user = await _userService.GetAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (UserId != user.UserId && !UserIsAdmin)
+            {
+                return Unauthorized();
+            }
+            DeleteUser command = new DeleteUser { UserId = user.UserId };
+
+            await DispatchAsync(command);
+            return Ok();
+        }
+
+        [HttpDelete("{email}")]
+        public async Task<IActionResult> Delete([FromRoute]string email)
+        {
+            var user = await _userService.GetAsync(email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (UserId != user.UserId && !UserIsAdmin)
+            {
+                return Unauthorized();
+            }
+            DeleteUser command = new DeleteUser { UserId = user.UserId };
 
             await DispatchAsync(command);
             return Ok();

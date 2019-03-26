@@ -94,5 +94,10 @@ namespace DietPlanner.Infrastructure.Services
             var changedUser = User.Create(userId, username ?? user.Username, email?? user.Email, role?? user.Role, password?? user.Password, salt?? user.Salt);
             await _userRepository.UpdateAsync(changedUser);
         }
+
+        public async Task DeleteUserAsync(Guid userId)
+        {
+            await _userRepository.RemoveAsync(userId);
+        }
     }
 }

@@ -20,6 +20,7 @@ namespace DietPlanner.Api.Controllers
         protected bool UserIsAdmin => User.HasClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin") ?
             true :
             false;
+        
 
         protected ApiControllerBase(ICommandDispatcher commandDispatcher)
         {
@@ -34,5 +35,6 @@ namespace DietPlanner.Api.Controllers
             }
             await _commandDispatcher.DispatchAsync(command);
         }
+        
     }
 }

@@ -14,5 +14,6 @@ namespace DietPlanner.Infrastructure.Services
         Task RegisterAsync(Guid userId, string username, string email, string password, string role);
         Task LoginAsync(string email, string password);
         Task UpdateUserAsync(Guid userId, string username, string email, string password, string roles);
+        Task DeleteUserAsync(Guid userId);
     }
 }
