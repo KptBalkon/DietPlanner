@@ -65,7 +65,7 @@ namespace DietPlanner.Api.Controllers
             return Json(user);
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpPut("{userId:guid}")]
         public async Task<IActionResult> Put([FromBody]UpdateUser command, [FromRoute]Guid userId)
         {
@@ -77,21 +77,12 @@ namespace DietPlanner.Api.Controllers
             }
 
             command.UserId = user.UserId;
-            if (UserId != userId && !UserIsAdmin)
-            {
-                return Unauthorized();
-            }
-
-            if (!UserIsAdmin && command.Role == "admin")
-            {
-                return Unauthorized();
-            }
 
             await DispatchAsync(command);
             return Ok();
         }
 
-        [Authorize("admin")]
+        [Authorize(Roles = "admin")]
         [HttpPut("{email}")]
         public async Task<IActionResult> Put([FromBody]UpdateUser command, [FromRoute]string email)
         {
@@ -104,12 +95,17 @@ namespace DietPlanner.Api.Controllers
 
             command.UserId = user.UserId;
 
-            if (UserId != user.UserId && !UserIsAdmin)
-            {
-                return Unauthorized();
-            }
+            await DispatchAsync(command);
+            return Ok();
+        }
 
-            if (command.Role == "admin" && !UserIsAdmin)
+        [Authorize]
+        [HttpPut("me")]
+        public async Task<IActionResult> PutMe([FromBody]UpdateUser command)
+        {
+            command.UserId = Guid.Parse(User.Identity.Name);
+
+            if (command.Role == "admin")
             {
                 return Unauthorized();
             }
@@ -117,8 +113,8 @@ namespace DietPlanner.Api.Controllers
             await DispatchAsync(command);
             return Ok();
         }
-        
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{userId:guid}")]
         public async Task<IActionResult> Delete([FromRoute]Guid userId)
         {
@@ -129,16 +125,13 @@ namespace DietPlanner.Api.Controllers
                 return NotFound();
             }
 
-            if (UserId != user.UserId && !UserIsAdmin)
-            {
-                return Unauthorized();
-            }
             DeleteUser command = new DeleteUser { UserId = user.UserId };
 
             await DispatchAsync(command);
             return Ok();
         }
 
+        [Authorize(Roles = "admin")]
         [HttpDelete("{email}")]
         public async Task<IActionResult> Delete([FromRoute]string email)
         {
@@ -149,15 +142,21 @@ namespace DietPlanner.Api.Controllers
                 return NotFound();
             }
 
-            if (UserId != user.UserId && !UserIsAdmin)
-            {
-                return Unauthorized();
-            }
             DeleteUser command = new DeleteUser { UserId = user.UserId };
 
             await DispatchAsync(command);
             return Ok();
         }
+
+        [Authorize]
+        [HttpDelete("me")]
+        public async Task<IActionResult> Delete()
+        {
+            DeleteUser command = new DeleteUser { UserId = Guid.Parse(User.Identity.Name) };
+            await DispatchAsync(command);
+            return Ok();
+        }
+
 
         //DODOK
         [HttpGet("{email}/plan")]
