@@ -22,7 +22,8 @@ namespace DietPlanner.Infrastructure.IoC.Modules
         {
             builder.RegisterInstance(_configuration.GetSettings<GeneralSettings>())
                 .SingleInstance(); //SingleInstance ponieważ potrzebujemy singletona do konfiguracji dla całej appki
-            
+            builder.RegisterInstance(_configuration.GetSettings<AuthenticationSettings>())
+           .SingleInstance();
         }
     }
 }

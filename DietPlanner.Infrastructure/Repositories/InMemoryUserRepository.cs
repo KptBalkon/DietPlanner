@@ -11,12 +11,7 @@ namespace DietPlanner.Infrastructure.Repositories
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        private static ISet<User> _users = new HashSet<User>
-            {
-            User.Create("Johnny6", "johnny@gmail.com", "secretpass", "salt"),
-            User.Create("SexyJackie", "jackie@gmail.com", "secretpass", "salt"),
-            User.Create("GoodEmperor", "empire@smail.com", "secretpass", "salt")
-            };
+        private static ISet<User> _users = new HashSet<User>();
 
 
         public async Task<User> GetAsync(Guid userId)
@@ -49,6 +44,9 @@ namespace DietPlanner.Infrastructure.Repositories
 
         public async Task UpdateAsync(User user)
         {
+            var userToRemove = await GetAsync(user.UserId);
+            _users.Remove(userToRemove);
+            _users.Add(user);
             await Task.CompletedTask;
         }
 

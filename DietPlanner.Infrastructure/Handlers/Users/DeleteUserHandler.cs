@@ -8,18 +8,18 @@ using System.Threading.Tasks;
 
 namespace DietPlanner.Infrastructure.Handlers.Users
 {
-    public class CreateUserHandler : ICommandHandler<CreateUser>
+    public class DeleteUserHandler : ICommandHandler<DeleteUser>
     {
         private readonly IUserService _userService;
 
-        public CreateUserHandler(IUserService userService)
+        public DeleteUserHandler(IUserService userService)
         {
             _userService = userService;
         }
 
-        public async Task HandleAsync(CreateUser command)
+        public async Task HandleAsync(DeleteUser command)
         {
-            await _userService.RegisterAsync(Guid.NewGuid(), command.Username, command.Email, command.Password, command.Role);
+            await _userService.DeleteUserAsync(command.UserId);
         }
     }
 }
