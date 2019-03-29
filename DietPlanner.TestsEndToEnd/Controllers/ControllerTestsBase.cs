@@ -1,4 +1,5 @@
 ﻿using DietPlanner.Api;
+using DietPlanner.Infrastructure.Commands.Users;
 using DietPlanner.Infrastructure.DTO;
 using DietPlanner.TestsEndToEnd.DTO;
 using Microsoft.AspNetCore;
@@ -59,5 +60,22 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             exception.StatusCode = httpResponseMessage.StatusCode;
             return exception;
         }
+
+        protected async Task<string> Login(string userEmail, string password)
+        {
+            var request = new Login
+            {
+                Email = userEmail,
+                Password = password
+            };
+            var payload = GetPayload(request);
+            var response = await Client.PostAsync("login", payload);
+
+            var stringresponse = await response.Content.ReadAsStringAsync();
+            TokenDTO token = JsonConvert.DeserializeObject<TokenDTO>(stringresponse);
+            return token.Token;
+        }
+
+
     }
 }

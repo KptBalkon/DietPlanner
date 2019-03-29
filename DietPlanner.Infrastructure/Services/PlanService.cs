@@ -20,9 +20,9 @@ namespace DietPlanner.Infrastructure.Services
             _mapper = mapper;
         }
 
-        public async Task<PlanDTO> GetUserPlanAsync(string email)
+        public async Task<PlanDTO> GetUserPlanAsync(Guid userId)
         {
-            User user = await _userRepository.GetAsync(email);
+            User user = await _userRepository.GetAsync(userId);
             if (user==null)
             {
                 return null;
@@ -30,9 +30,9 @@ namespace DietPlanner.Infrastructure.Services
             return _mapper.Map<Plan, PlanDTO>(user.Plan);
         }
 
-        public async Task RegisterUsersPlanAsync(string email, int plannedWeight, DateTime targetDate)
+        public async Task RegisterUsersPlanAsync(Guid userId, int plannedWeight, DateTime targetDate)
         {
-            User user = await _userRepository.GetAsync(email);
+            User user = await _userRepository.GetAsync(userId);
             if (user==null)
             {
                 return;
