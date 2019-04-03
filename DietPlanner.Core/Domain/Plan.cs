@@ -15,6 +15,7 @@ namespace DietPlanner.Core.Domain
         public DateTime TargetDate { get; protected set; }
         public ISet<CustomDay> CustomDays => _customDays;
         
+
         protected Plan()
         {
 

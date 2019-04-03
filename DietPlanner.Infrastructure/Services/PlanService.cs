@@ -12,11 +12,13 @@ namespace DietPlanner.Infrastructure.Services
     public class PlanService : IPlanService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPlanRepository _planRepository;
         private readonly IMapper _mapper;
 
-        public PlanService(IUserRepository userRepository, IMapper mapper)
+        public PlanService(IUserRepository userRepository, IPlanRepository planRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _planRepository = planRepository;
             _mapper = mapper;
         }
 
@@ -37,7 +39,7 @@ namespace DietPlanner.Infrastructure.Services
             {
                 return;
             }
-            await _userRepository.AddUsersPlanAsync(user, plannedWeight, targetDate);
+            await _planRepository.AddPlan(Plan.Create(userId,plannedWeight,targetDate));
         }
     }
 }
