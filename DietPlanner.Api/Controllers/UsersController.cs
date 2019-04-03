@@ -37,6 +37,10 @@ namespace DietPlanner.Api.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody]CreateUser command)
         {
+            if(command.Role=="admin" && !User.HasClaim("role","admin"))
+            {
+                return Unauthorized();
+            }
             await DispatchAsync(command);
             return Created($"users/{command.Email}", new object());
         }
