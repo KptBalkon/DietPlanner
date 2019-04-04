@@ -37,6 +37,10 @@ namespace DietPlanner.Api.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody]CreateUser command)
         {
+            if(command.Role=="admin" && !User.HasClaim("role","admin"))
+            {
+                return Unauthorized();
+            }
             await DispatchAsync(command);
             return Created($"users/{command.Email}", new object());
         }
@@ -157,10 +161,9 @@ namespace DietPlanner.Api.Controllers
             return Ok();
         }
 
-
-        //DODOK
+        [Authorize(Roles = "admin")]
         [HttpGet("{email}/plan")]
-        public async Task<IActionResult> GetPlan(string email)
+        public async Task<IActionResult> GetPlan([FromRoute]string email)
         {
             var user = await _userService.GetAsync(email);
             if (user == null)
@@ -168,19 +171,43 @@ namespace DietPlanner.Api.Controllers
                 return NotFound();
             }
 
-            var plan = await _planService.GetUserPlanAsync(email);
+            var plan = await _planService.GetUserPlanAsync(user.UserId);
 
             return Json(plan);
         }
 
-
-        //DODOK
-        [HttpPost("{email}/plan")]
-        public async Task<IActionResult> PostPlan([FromBody]AddUserPlan command, [FromRoute]string email)
+        [Authorize(Roles = "admin")]
+        [HttpGet("{userId:guid}/plan")]
+        public async Task<IActionResult> GetPlan([FromRoute]Guid userId)
         {
-            command.email = email;
+            var user = await _userService.GetAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var plan = await _planService.GetUserPlanAsync(user.UserId);
+
+            return Json(plan);
+        }
+
+        [Authorize]
+        [HttpGet("me/plan")]
+        public async Task<IActionResult> GetMyPlan()
+        {
+            var user = await _userService.GetAsync(UserId);
+
+            var plan = await _planService.GetUserPlanAsync(UserId);
+
+            return Json(plan);
+        }
+
+        [Authorize]
+        [HttpPost("me/plan")]
+        public async Task<IActionResult> PostPlan([FromBody]AddUserPlan command)
+        {
             await DispatchAsync(command);
-            return Created($"users/{command.email}/plan", new object());
+            return Created($"users/me/plan", new object());
         }
     }
 }

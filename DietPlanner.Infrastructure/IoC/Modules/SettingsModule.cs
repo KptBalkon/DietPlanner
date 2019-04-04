@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using DietPlanner.Infrastructure.EF;
 using DietPlanner.Infrastructure.Extensions;
 using DietPlanner.Infrastructure.Settings;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +24,9 @@ namespace DietPlanner.Infrastructure.IoC.Modules
             builder.RegisterInstance(_configuration.GetSettings<GeneralSettings>())
                 .SingleInstance(); //SingleInstance ponieważ potrzebujemy singletona do konfiguracji dla całej appki
             builder.RegisterInstance(_configuration.GetSettings<AuthenticationSettings>())
-           .SingleInstance();
+                .SingleInstance();
+            builder.RegisterInstance(_configuration.GetSettings<SqlSettings>())
+                .SingleInstance();
         }
     }
 }

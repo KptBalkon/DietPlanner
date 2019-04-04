@@ -55,12 +55,13 @@ namespace DietPlanner.Tests.Services
         }
 
         [Test]
-        public async Task get_plan_async_with_nonexisten_email_should_return_null()
+        public async Task get_plan_async_with_nonexisten_guid_should_return_null()
         {
             var userRepositoryMock = new Mock<IUserRepository>();
+            var planRepositoryMock = new Mock<IPlanRepository>();
             var mapperMock = new Mock<IMapper>();
-            var planService = new PlanService(userRepositoryMock.Object, mapperMock.Object);
-            var plan = await planService.GetUserPlanAsync("notexist@email.com");
+            var planService = new PlanService(userRepositoryMock.Object, planRepositoryMock.Object, mapperMock.Object);
+            var plan = await planService.GetUserPlanAsync(Guid.NewGuid());
             Assert.AreEqual(plan, null);
         }
 
@@ -69,12 +70,13 @@ namespace DietPlanner.Tests.Services
         {
             var userRepositoryMock = new Mock<IUserRepository>();
             var mapperMock = new Mock<IMapper>();
+            var planRepositoryMock = new Mock<IPlanRepository>();
+            userRepositoryMock.Setup(x => x.GetAsync(Guid.Parse("7b20d88b-1ac1-4ea3-a1e2-4d841ac10edd"))).ReturnsAsync(() => User.Create(Guid.Parse("7b20d88b-1ac1-4ea3-a1e2-4d841ac10edd"), "user11", "user@email.com", "user", "password", "salt"));
 
-            userRepositoryMock.Setup(x => x.GetAsync("user@email.com")).ReturnsAsync(() => User.Create(Guid.NewGuid(), "user11", "user@email.com", "user", "password", "salt"));
+            var planService = new PlanService(userRepositoryMock.Object, planRepositoryMock.Object, mapperMock.Object);
 
-            var planService = new PlanService(userRepositoryMock.Object, mapperMock.Object);
-            await planService.RegisterUsersPlanAsync("user@email.com", 60, DateTime.UtcNow);
-            userRepositoryMock.Verify(x => x.AddUsersPlanAsync(It.IsAny<User>(),It.IsAny<int>(), It.IsAny<DateTime>()), Times.Once);
+            await planService.RegisterUsersPlanAsync(Guid.Parse("7b20d88b-1ac1-4ea3-a1e2-4d841ac10edd"), 60, DateTime.UtcNow);
+            planRepositoryMock.Verify(x => x.AddPlan(It.IsAny<Plan>()), Times.Once);
         }
     }
 }

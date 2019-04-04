@@ -8,12 +8,11 @@ namespace DietPlanner.Core.Repositories
 {
     public interface IUserRepository: IRepository
     {
-        Task<User> GetAsync(Guid UserId);
+        Task<User> GetAsync(Guid userId);
         Task<User> GetAsync(string email);
         Task<IEnumerable<User>> GetAllAsync();
         Task AddAsync(User user);
         Task UpdateAsync(User user);
-        Task RemoveAsync(Guid UserId);
-        Task AddUsersPlanAsync(User user, int plannedWeight, DateTime targetDate);
+        Task RemoveAsync(Guid userId);
     }
 }

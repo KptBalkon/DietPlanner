@@ -8,7 +8,7 @@ namespace DietPlanner.Infrastructure.Services
 {
     public interface IPlanService:IService
     {
-        Task<PlanDTO> GetUserPlanAsync(string email);
-        Task RegisterUsersPlanAsync(string email, int plannedWeight, DateTime targetDate);
+        Task<PlanDTO> GetUserPlanAsync(Guid userId);
+        Task RegisterUsersPlanAsync(Guid userId, int plannedWeight, DateTime targetDate);
     }
 }

@@ -196,18 +196,19 @@ namespace DietPlanner.TestsEndToEnd.Controllers
         [Test]
         public async Task given_negative_weight_exception_should_be_thrown()
         {
+            var token = await Login("user1@email.com", "secretpassword");
             var request = new AddUserPlan
             {
-                email = "empire@smail.com",
                 plannedWeight = -40,
                 targetDate = DateTime.Parse("02/02/2020")
             };
             var payload = GetPayload(request);
-            var token = await GetRandomTokenAsync();
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
 
-            var response = await Client.PostAsync("users/user1@email.com/plan", payload);
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Client.PostAsync("users/me/plan", payload);
             var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
 
             //TODO: CustomException: InproperDataException
             Assert.AreEqual(responseMessage.StatusCode,HttpStatusCode.InternalServerError);
@@ -217,18 +218,18 @@ namespace DietPlanner.TestsEndToEnd.Controllers
         [Test]
         public async Task given_past_target_date_exception_should_be_thrown()
         {
+            var token = await Login("user1@email.com", "secretpassword");
+
             var request = new AddUserPlan
             {
-                email = "empire@smail.com",
-                plannedWeight = 80,
-                targetDate = DateTime.Parse("02/02/1991")
+                plannedWeight = 40,
+                targetDate = DateTime.Parse("02/02/2010")
             };
             var payload = GetPayload(request);
-            var token = await GetRandomTokenAsync();
 
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await Client.PostAsync("users/user1@email.com/plan", payload);
+            var response = await Client.PostAsync("users/me/plan", payload);
             var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
 
             Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);

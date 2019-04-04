@@ -12,17 +12,19 @@ namespace DietPlanner.Infrastructure.Services
     public class PlanService : IPlanService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IPlanRepository _planRepository;
         private readonly IMapper _mapper;
 
-        public PlanService(IUserRepository userRepository, IMapper mapper)
+        public PlanService(IUserRepository userRepository, IPlanRepository planRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _planRepository = planRepository;
             _mapper = mapper;
         }
 
-        public async Task<PlanDTO> GetUserPlanAsync(string email)
+        public async Task<PlanDTO> GetUserPlanAsync(Guid userId)
         {
-            User user = await _userRepository.GetAsync(email);
+            User user = await _userRepository.GetAsync(userId);
             if (user==null)
             {
                 return null;
@@ -30,14 +32,14 @@ namespace DietPlanner.Infrastructure.Services
             return _mapper.Map<Plan, PlanDTO>(user.Plan);
         }
 
-        public async Task RegisterUsersPlanAsync(string email, int plannedWeight, DateTime targetDate)
+        public async Task RegisterUsersPlanAsync(Guid userId, int plannedWeight, DateTime targetDate)
         {
-            User user = await _userRepository.GetAsync(email);
+            User user = await _userRepository.GetAsync(userId);
             if (user==null)
             {
                 return;
             }
-            await _userRepository.AddUsersPlanAsync(user, plannedWeight, targetDate);
+            await _planRepository.AddPlan(Plan.Create(userId,plannedWeight,targetDate));
         }
     }
 }

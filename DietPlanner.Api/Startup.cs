@@ -3,6 +3,7 @@ using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using DietPlanner.Api.Middleware;
+using DietPlanner.Infrastructure.EF;
 using DietPlanner.Infrastructure.IoC;
 using DietPlanner.Infrastructure.Services;
 using DietPlanner.Infrastructure.Settings;
@@ -62,9 +63,11 @@ namespace DietPlanner.Api
                     };
                 });
             services.Configure<AuthenticationSettings>(jwtSection);
-
             services.AddMemoryCache();
             services.AddMvc().AddJsonOptions(o => o.SerializerSettings.Formatting = Formatting.Indented);
+            services.AddEntityFrameworkSqlServer()
+                .AddEntityFrameworkInMemoryDatabase()
+                .AddDbContext<DietPlannerContext>();
 
             var builder = new ContainerBuilder();
             builder.Populate(services);

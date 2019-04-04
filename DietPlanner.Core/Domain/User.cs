@@ -20,7 +20,6 @@ namespace DietPlanner.Core.Domain
         public DateTime UpdatedAt { get; protected set; }
 
         public Plan Plan { get; protected set; }
-        public IEnumerable<WeightPoint> WeightPoints { get; protected set; }
 
         protected User()
         {
