@@ -31,7 +31,7 @@ namespace DietPlanner.Infrastructure.Repositories
 
         public async Task<User> GetAsync(Guid userId)
         {
-           return await _context.Users.SingleOrDefaultAsync(x => x.UserId == userId);
+           return await _context.Users.Include(u => u.Plan).SingleOrDefaultAsync(x => x.UserId == userId);
         }
 
         public async Task<User> GetAsync(string email)

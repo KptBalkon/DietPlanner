@@ -18,8 +18,8 @@ namespace DietPlanner.Core.Domain
         public string Role { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
         public DateTime UpdatedAt { get; protected set; }
-
-        public Plan Plan { get; protected set; }
+    
+        public Plan Plan { get; set; }
 
         protected User()
         {

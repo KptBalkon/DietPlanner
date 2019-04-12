@@ -41,5 +41,15 @@ namespace DietPlanner.Infrastructure.Services
             }
             await _planRepository.AddPlan(Plan.Create(userId,plannedWeight,targetDate));
         }
+
+        public async Task AddCustomDayAsync(Guid userId, DateTime day, int calories)
+        {
+            User user = await _userRepository.GetAsync(userId);
+            if (user==null || user.Plan==null)
+            {
+                return;
+            }
+            await _planRepository.AddCustomDay(CustomDay.Create(user.Plan.PlanId, day, calories));
+        }
     }
 }

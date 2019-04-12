@@ -16,12 +16,17 @@ namespace DietPlanner.Infrastructure.Repositories
         {
             _context = context;
         }
-
-
         public async Task AddPlan(Plan plan)
         {
             _context.Add(plan);
             await _context.SaveChangesAsync();
         }
+
+        public async Task AddCustomDay(CustomDay customDay)
+        {
+            _context.Add(customDay);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

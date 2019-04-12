@@ -9,5 +9,6 @@ namespace DietPlanner.Core.Repositories
     public interface IPlanRepository : IRepository
     {
         Task AddPlan(Plan plan);
+        Task AddCustomDay(CustomDay customDay);
     }
 }

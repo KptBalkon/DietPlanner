@@ -10,11 +10,12 @@ namespace DietPlanner.Core.Domain
         private ISet<CustomDay> _customDays = new HashSet<CustomDay>();
 
         public Guid PlanId { get; protected set; }
-        public Guid UserId { get; protected set; }
         public int PlannedWeight { get; protected set; }
         public DateTime TargetDate { get; protected set; }
         public ISet<CustomDay> CustomDays => _customDays;
-        
+
+        public Guid UserId { get; set; }
+        public User User { get; set; }
 
         protected Plan()
         {

@@ -10,5 +10,6 @@ namespace DietPlanner.Infrastructure.Services
     {
         Task<PlanDTO> GetUserPlanAsync(Guid userId);
         Task RegisterUsersPlanAsync(Guid userId, int plannedWeight, DateTime targetDate);
+        Task AddCustomDayAsync(Guid userId, DateTime day, int calories);
     }
 }

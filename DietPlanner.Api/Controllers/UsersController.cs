@@ -209,5 +209,13 @@ namespace DietPlanner.Api.Controllers
             await DispatchAsync(command);
             return Created($"users/me/plan", new object());
         }
+        
+        [Authorize]
+        [HttpPost("me/plan/customday")]
+        public async Task<IActionResult> PostCustomDay([FromBody]AddCustomDay command)
+        {
+            await DispatchAsync(command);
+            return Created($"users/me/plan", new object());
+        }
     }
 }

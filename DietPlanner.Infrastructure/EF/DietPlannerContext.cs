@@ -13,6 +13,7 @@ namespace DietPlanner.Infrastructure.EF
         public DbSet<User> Users { get; set; }
         public DbSet<Plan> Plans { get; set; }
         public DbSet<WeightPoint> WeightPoints { get; set; }
+        public DbSet<CustomDay> CustomDays { get; set; }
 
         public DietPlannerContext(DbContextOptions<DietPlannerContext> options, SqlSettings sqlSettings) : base(options)
         {
@@ -32,7 +33,10 @@ namespace DietPlanner.Infrastructure.EF
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasKey(u => u.UserId);
+                .HasOne(u => u.Plan)
+                .WithOne(p => p.User)
+                .HasForeignKey<Plan>(e => e.UserId);
+          //      .HasKey(u => u.UserId);
         }
     }
 }

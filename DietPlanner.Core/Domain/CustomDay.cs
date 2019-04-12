@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DietPlanner.Core.Domain
 {
     public class CustomDay
     {
         public Guid CustomDayId { get; protected set; }
+
         public Guid PlanId { get; protected set; }
         public DateTime Date { get; protected set; }
         public int Calories { get; protected set; }
