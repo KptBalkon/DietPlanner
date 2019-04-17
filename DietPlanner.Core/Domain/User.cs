@@ -18,7 +18,9 @@ namespace DietPlanner.Core.Domain
         public string Role { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
         public DateTime UpdatedAt { get; protected set; }
-    
+
+        public ISet<WeightPoint> WeightPoints { get; set; }
+
         public Plan Plan { get; set; }
 
         protected User()

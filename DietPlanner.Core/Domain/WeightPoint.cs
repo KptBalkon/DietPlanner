@@ -6,18 +6,20 @@ namespace DietPlanner.Core.Domain
     public class WeightPoint
     {
         public Guid WeightPointId { get; protected set; }
-        public Guid PlanId { get; protected set; }
+        public Guid UserId { get; protected set; }
         public int Weight { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
+
+        public User User { get; set; }
 
         protected WeightPoint()
         {
         }
 
-        protected WeightPoint(Guid planId, int weight, DateTime? weightTime=null)
+        protected WeightPoint(Guid userId, int weight, DateTime? weightTime=null)
         {
             WeightPointId = Guid.NewGuid();
-            PlanId = planId;
+            UserId = userId;
             Weight = weight;
             CreatedAt = weightTime.DateSetToUtcNowIfNull();
         }
@@ -29,7 +31,7 @@ namespace DietPlanner.Core.Domain
         /// <param name="weight"></param>
         /// <param name="weightTime"></param>
         /// <returns></returns>
-        public static WeightPoint Create(Guid planId, int weight, DateTime? weightTime = null)
-            => new WeightPoint(planId, weight, weightTime);
+        public static WeightPoint Create(Guid userId, int weight, DateTime? weightTime = null)
+            => new WeightPoint(userId, weight, weightTime);
     }
 }

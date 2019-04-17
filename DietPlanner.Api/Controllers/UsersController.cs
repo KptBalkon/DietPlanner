@@ -217,5 +217,23 @@ namespace DietPlanner.Api.Controllers
             await DispatchAsync(command);
             return Created($"users/me/plan", new object());
         }
+
+        [Authorize]
+        [HttpPost("me/weight")]
+        public async Task<IActionResult> PostWeightPoint([FromBody]AddWeightPoint command)
+        {
+            await DispatchAsync(command);
+            return Created($"users/me", new object());
+        }
+        /// <summary>
+        /// Calculates calories for each day from now till planned target date basing on user's plan and custom calorie days.
+        /// </summary>
+        [Authorize]
+        [HttpGet("me/plan/calculate")]
+        public async Task<IActionResult> GetCalculatedPlan()
+        {
+            //Have to think through this. For now i have the plan to generate a dictionary of days and calories <datetime,int> and return it as JSON file.
+            return Ok();
+        }
     }
 }
