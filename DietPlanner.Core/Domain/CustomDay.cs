@@ -11,6 +11,8 @@ namespace DietPlanner.Core.Domain
         public DateTime Date { get; protected set; }
         public int Calories { get; protected set; }
 
+        public Plan Plan { get; set; }
+
         protected CustomDay()
         {
 

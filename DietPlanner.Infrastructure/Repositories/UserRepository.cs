@@ -26,17 +26,17 @@ namespace DietPlanner.Infrastructure.Repositories
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u => u.Plan).ToListAsync();
         }
 
         public async Task<User> GetAsync(Guid userId)
         {
-           return await _context.Users.Include(u => u.Plan).SingleOrDefaultAsync(x => x.UserId == userId);
+           return await _context.Users.Include(u => u.Plan).ThenInclude(p => p.CustomDays).SingleOrDefaultAsync(x => x.UserId == userId);
         }
 
         public async Task<User> GetAsync(string email)
         {
-            return await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
+            return await _context.Users.Include(u => u.Plan).ThenInclude(p => p.CustomDays).SingleOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task UpdateAsync(User user)

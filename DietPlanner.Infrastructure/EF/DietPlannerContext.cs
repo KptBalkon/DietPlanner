@@ -36,7 +36,10 @@ namespace DietPlanner.Infrastructure.EF
                 .HasOne(u => u.Plan)
                 .WithOne(p => p.User)
                 .HasForeignKey<Plan>(e => e.UserId);
-          //      .HasKey(u => u.UserId);
+
+            modelBuilder.Entity<Plan>()
+                 .HasMany(p => p.CustomDays)
+                 .WithOne(cd => cd.Plan);
         }
     }
 }
