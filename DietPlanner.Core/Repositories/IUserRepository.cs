@@ -14,5 +14,6 @@ namespace DietPlanner.Core.Repositories
         Task AddAsync(User user);
         Task UpdateAsync(User user);
         Task RemoveAsync(Guid userId);
+        Task UpdateDetailsAsync(User user);
     }
 }

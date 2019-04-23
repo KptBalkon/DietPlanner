@@ -57,5 +57,11 @@ namespace DietPlanner.Infrastructure.Repositories
             _context.Add(plan);
                 await _context.SaveChangesAsync();
         }
+
+        public async Task UpdateDetailsAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

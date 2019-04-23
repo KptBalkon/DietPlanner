@@ -99,5 +99,12 @@ namespace DietPlanner.Infrastructure.Services
         {
             await _userRepository.RemoveAsync(userId);
         }
+
+        public async Task UpdateUserDetailsAsync(Guid userId, DateTime birthday, int height, string sex)
+        {
+            var user = await _userRepository.GetAsync(userId);
+            user.SetDetails(height, sex, birthday);
+            await _userRepository.UpdateDetailsAsync(user);
+        }
     }
 }

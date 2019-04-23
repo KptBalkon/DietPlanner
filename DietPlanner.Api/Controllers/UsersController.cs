@@ -235,5 +235,13 @@ namespace DietPlanner.Api.Controllers
             //Have to think through this. For now i have the plan to generate a dictionary of days and calories <datetime,int> and return it as JSON file.
             return Ok();
         }
+
+        [Authorize]
+        [HttpPut("me/details")]
+        public async Task<IActionResult> PutUserDetails([FromBody]PutUserDetails command)
+        {
+            await DispatchAsync(command);
+            return Ok();
+        }
     }
 }

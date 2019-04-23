@@ -43,7 +43,7 @@ namespace DietPlanner.Core.Domain
             SetRole(role);
         }
 
-        public void SetStats(int height, string sex, DateTime birthday)
+        public void SetDetails(int height, string sex, DateTime birthday)
         {
             SetHeight(height);
             SetSex(sex);

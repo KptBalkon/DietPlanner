@@ -55,5 +55,10 @@ namespace DietPlanner.Infrastructure.Repositories
             user.CreatePlan(plannedWeight, targetDate);
             await Task.CompletedTask;
         }
+
+        public Task UpdateDetailsAsync(User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
