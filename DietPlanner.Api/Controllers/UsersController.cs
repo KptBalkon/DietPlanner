@@ -229,10 +229,10 @@ namespace DietPlanner.Api.Controllers
         /// Calculates calories for each day from now till planned target date basing on user's plan and custom calorie days.
         /// </summary>
         [Authorize]
-        [HttpGet("me/plan/calculate")]
-        public async Task<IActionResult> GetCalculatedPlan()
+        [HttpPost("me/plan/calculate")]
+        public async Task<IActionResult> GetCalculatedPlan([FromBody]CalculatePlan command)
         {
-            //Have to think through this. For now i have the plan to generate a dictionary of days and calories <datetime,int> and return it as JSON file.
+            await DispatchAsync(command);
             return Ok();
         }
 
