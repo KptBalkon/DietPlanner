@@ -225,16 +225,6 @@ namespace DietPlanner.Api.Controllers
             await DispatchAsync(command);
             return Created($"users/me", new object());
         }
-        /// <summary>
-        /// Calculates calories for each day from now till planned target date basing on user's plan and custom calorie days.
-        /// </summary>
-        [Authorize]
-        [HttpPost("me/plan/calculate")]
-        public async Task<IActionResult> GetCalculatedPlan([FromBody]CalculatePlan command)
-        {
-            await DispatchAsync(command);
-            return Ok();
-        }
 
         [Authorize]
         [HttpPut("me/details")]
@@ -242,6 +232,18 @@ namespace DietPlanner.Api.Controllers
         {
             await DispatchAsync(command);
             return Ok();
+        }
+
+        /// <summary>
+        /// Calculates calories for each day from now till planned target date basing on user's plan and custom calorie days.
+        /// </summary>
+        [Authorize]
+        [HttpPost("me/plan/calculate")]
+        public async Task<IActionResult> GetCalculatedPlan([FromBody]CalculatePlan command)
+        {
+            command.UserId = Guid.Parse(User.Identity.Name);
+            var calculatedplan = await _planService.CalculatePlan(command.UserId, command.activityLevel);
+            return Json(calculatedplan);
         }
     }
 }

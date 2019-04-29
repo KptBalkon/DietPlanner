@@ -144,7 +144,7 @@ namespace DietPlanner.Core.Domain
 
         public int GetAge()
         {
-            return (DateTime.Now - Birthday).Days;
+            return (int)(DateTime.Now - Birthday).Days/365;
         }
 
         public static User Create(Guid userId, string username, string email, string role, string password, string salt)
