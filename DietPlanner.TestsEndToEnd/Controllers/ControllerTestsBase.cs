@@ -17,12 +17,16 @@ namespace DietPlanner.TestsEndToEnd.Controllers
     {
         protected readonly TestServer Server;
         protected readonly HttpClient Client;
-
+        static public Guid nonexistentGuid;
+        static public Guid testUserGuid;
+        
         public ControllerTestsBase()
         {
             Server = new TestServer(WebHost.CreateDefaultBuilder()
                 .UseStartup<Startup>());
             Client = Server.CreateClient();
+            nonexistentGuid = new Guid("12345678-bead-babe-dead-badbadbadbad");
+            testUserGuid = new Guid("3103DF88-C511-4718-8A26-51663C33231A");
         }
 
         protected static StringContent GetPayload(object data)

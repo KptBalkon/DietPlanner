@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DietPlanner.Tests.Services
 {
     [TestFixture]
-    public class UserServiceTests
+    public class UserServiceTests : ServiceTestsBase
     {
 
         [Test]

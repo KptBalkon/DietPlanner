@@ -235,5 +235,64 @@ namespace DietPlanner.TestsEndToEnd.Controllers
             Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
             Assert.AreEqual(responseMessage.Message, "Please provide future date");
         }
+
+        [Test]
+        public async Task calculating_plan_for_user_without_plan_exception_should_be_thrown()
+        {
+            var token = await Login("user4@email.com", "secretpassword");
+            var request = new CalculatePlan
+            {
+                activityLevel = 3,
+                UserId = Guid.Parse("B10192DB-383A-4496-98B0-108AE80A66B4")
+            };
+            var payload = GetPayload(request);
+
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Client.PostAsync("users/me/plan/calculate", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "User has no plan");
+        }
+
+        [Test]
+        public async Task calculating_plan_for_user_without_weight_points_exception_should_be_thrown()
+        {
+            var token = await Login("user7@email.com", "secretpassword");
+            var request = new CalculatePlan
+            {
+                activityLevel = 3,
+                UserId = Guid.Parse("D3C8D8FA-FE5B-4DE2-B295-5C4D78EDB0EC")
+            };
+            var payload = GetPayload(request);
+
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Client.PostAsync("users/me/plan/calculate", payload);
+            var responseMessage = await ConvertResponseToExceptionDTOAsync(response);
+
+            Assert.AreEqual(responseMessage.StatusCode, HttpStatusCode.InternalServerError);
+            Assert.AreEqual(responseMessage.Message, "User has no weightpoints");
+        }
+
+        [Test]
+        public async Task calculating_plan_for_user_returns_nonempty()
+        {
+            var token = await Login("test@email.com", "testtest");
+            var request = new CalculatePlan
+            {
+                activityLevel = 3,
+                UserId = testUserGuid
+            };
+            var payload = GetPayload(request);
+
+            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Client.PostAsync("users/me/plan/calculate", payload);
+            var responseMessage = await response.Content.ReadAsStringAsync();
+
+            Assert.IsNotEmpty(responseMessage);
+        }
     }
 }

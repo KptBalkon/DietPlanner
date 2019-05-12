@@ -62,32 +62,57 @@ namespace DietPlanner.Infrastructure.Services
             if (!user.WeightPoints.Any()) throw new Exception("User has no weightpoints");
 
             int currentWeight = user.WeightPoints.OrderByDescending(wp => wp.CreatedAt).First().Weight;
-            int bmr = this.CaluclateBMR(currentWeight, user.Height, user.Age, user.Sex);
-            int tdee = (int)(bmr * (1.025 + (activityLevel * 0.175))); 
+            int bmr = CaluclateBMR(currentWeight, user.Height, user.Age, user.Sex);
+            int tdee = CalculateTDEE(activityLevel, bmr);
             int toLose = currentWeight - user.Plan.PlannedWeight;
-            int daysCount = CountDaysTo(user.Plan.TargetDate);
+            int daysCount = CountDaysBetween(user.Plan.TargetDate, DateTime.Now);
             int nonCustomDaysCount = daysCount - user.Plan.CustomDays.Count;
 
-            int totalCalories = (daysCount * tdee) - (toLose * 7500);
-            int totalCaloriesNonCustom = totalCalories - user.Plan.CustomDays.Sum(c => c.Calories);
-            int nonCustomTdee = (int)(totalCaloriesNonCustom / nonCustomDaysCount);
+            int totalCalories = GetTotalCalories(tdee, toLose, daysCount);
+            int totalCaloriesNonCustom = GetTotalCaloriesNonCustom(user, totalCalories);
+            int nonCustomDaysTDEE = GetTDEEforNonCustomDays(nonCustomDaysCount, totalCaloriesNonCustom);
 
-            Dictionary<DateTime, int> resultPlan = new Dictionary<DateTime, int>(daysCount);
+            Dictionary<DateTime, int> planToFill = new Dictionary<DateTime, int>();
 
+            return fillUsersPlan(user, nonCustomDaysTDEE, planToFill, daysCount);
+        }
+
+        private static Dictionary<DateTime, int> fillUsersPlan(User user, int nonCustomDaysTDEE, Dictionary<DateTime, int> planToFill, int daysCount)
+        {
             for (int i = 0; i < daysCount; i++)
             {
                 DateTime day = DateTime.Now.Date.AddDays(i);
                 if (user.Plan.CustomDays.FirstOrDefault(dt => dt.Date.Date == day) != null)
                 {
-                    resultPlan[day] = user.Plan.CustomDays.FirstOrDefault(dt => dt.Date.Date == day).Calories;
+                    planToFill.Add(day, user.Plan.CustomDays.FirstOrDefault(dt => dt.Date.Date == day).Calories);
                 }
                 else
                 {
-                    resultPlan[day] = nonCustomTdee;
+                    planToFill.Add(day, nonCustomDaysTDEE);
                 }
             }
 
-            return resultPlan;
+            return planToFill;
+        }
+
+        private static int GetTDEEforNonCustomDays(int nonCustomDaysCount, int totalCaloriesNonCustom)
+        {
+            return (int)(totalCaloriesNonCustom / nonCustomDaysCount);
+        }
+
+        private static int GetTotalCaloriesNonCustom(User user, int totalCalories)
+        {
+            return totalCalories - user.Plan.CustomDays.Sum(c => c.Calories);
+        }
+
+        private static int GetTotalCalories(int tdee, int toLose, int daysCount)
+        {
+            return (daysCount * tdee) - (toLose * 7500);
+        }
+
+        private static int CalculateTDEE(int activityLevel, int bmr)
+        {
+            return (int)(bmr * (1.025 + (activityLevel * 0.175)));
         }
 
         private int CaluclateBMR(int currentWeight, int height, int age, string sex)
@@ -108,9 +133,9 @@ namespace DietPlanner.Infrastructure.Services
 
         }
 
-        private int CountDaysTo(DateTime targetDate)
+        private int CountDaysBetween(DateTime earlierDate, DateTime laterDate)
         {
-            return (targetDate - DateTime.Now).Days;
+            return (earlierDate - laterDate).Days;
         }
     }
 }
